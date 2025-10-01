@@ -3,119 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Notepad</title>
+    <meta name="description" content="Welltoodit - A clean, simple, and reliable notepad that lives in your browser. Auto-saves your notes with dark mode support.">
+    <meta name="keywords" content="notepad, online notepad, text editor, notes, writing, auto-save">
+    <meta name="author" content="Welltoodit">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Welltoodit - Online Notepad">
+    <meta property="og:description" content="A clean, simple, and reliable notepad that lives in your browser">
+    <meta property="og:type" content="website">
+    
+    <title>Welltoodit - Online Notepad</title>
+    
+    <!-- Preconnect to external domains for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
     
-    <style>
-        /* CSS styles are embedded here */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f4f7f9;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: #333;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 800px;
-            height: 80vh;
-            display: flex;
-            flex-direction: column;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid #e0e0e0;
-            padding-bottom: 1rem;
-        }
-
-        h1 {
-            margin: 0;
-            color: #2c3e50;
-        }
-
-        p {
-            color: #7f8c8d;
-        }
-
-        #notepad {
-            flex-grow: 1;
-            border: 1px solid #dcdfe6;
-            border-radius: 6px;
-            padding: 1rem;
-            font-size: 1rem;
-            line-height: 1.6;
-            resize: none;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        #notepad:focus {
-            border-color: #4a90e2;
-        }
-
-        #clearBtn {
-            margin-top: 1rem;
-            padding: 0.75rem 1.5rem;
-            border: none;
-            background-color: #e74c3c;
-            color: white;
-            font-size: 1rem;
-            font-weight: 500;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        #clearBtn:hover {
-            background-color: #c0392b;
-        }
-    </style>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+    
+    <!-- Theme color for mobile browsers -->
+    <meta name="theme-color" content="#4a90e2">
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Online Notepad</h1>
-            <p>Your notes are saved automatically.</p>
+        <!-- Header Section -->
+        <header class="header">
+            <div class="header-left">
+                <h1>Welltoodit</h1>
+                <p>Your thoughts, safely stored</p>
+            </div>
+            <div class="header-right">
+                <button id="theme-toggle" class="theme-toggle" title="Toggle dark/light mode" aria-label="Toggle theme">
+                    <span class="sun-icon">☀️</span>
+                    <span class="moon-icon">🌙</span>
+                </button>
+            </div>
         </header>
-        <textarea id="notepad" placeholder="Start writing..."></textarea>
-        <button id="clearBtn">Clear Note</button>
+
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="stats-left">
+                <span><strong id="word-count">0</strong> words</span>
+                <span><strong id="char-count">0</strong> characters</span>
+            </div>
+            <div class="stats-right">
+                <div class="save-indicator" aria-live="polite">
+                    <div class="save-dot"></div>
+                    <span>Saved</span>
+                </div>
+                <span>Last saved: <span id="last-save">Never</span></span>
+            </div>
+        </div>
+
+        <!-- Main Textarea -->
+        <textarea 
+            id="notepad" 
+            class="notepad" 
+            placeholder="Start writing your thoughts here... ✨"
+            aria-label="Main notepad text area"
+            spellcheck="true"
+            autocomplete="off"
+        ></textarea>
+
+        <!-- Control Buttons -->
+        <div class="controls">
+            <div class="controls-left">
+                <button id="download-btn" class="btn btn-secondary" title="Download note as text file" aria-label="Download note">
+                    <span class="btn-icon">📥</span> Download
+                </button>
+            </div>
+            <div class="controls-right">
+                <button id="clear-btn" class="btn btn-danger" title="Clear all text" aria-label="Clear note">
+                    <span class="btn-icon">🗑️</span> Clear
+                </button>
+            </div>
+        </div>
+
+        <!-- Keyboard Shortcuts Info -->
+        <div class="shortcuts-info">
+            <strong>Shortcuts:</strong>
+            <kbd>Ctrl+S</kbd> Save • 
+            <kbd>Ctrl+D</kbd> Download • 
+            <kbd>Ctrl+N</kbd> Clear • 
+            <kbd>Ctrl+T</kbd> Theme
+        </div>
     </div>
-    
-    <script>
-        // JavaScript logic is embedded here
-        const notepad = document.getElementById('notepad');
-        const clearBtn = document.getElementById('clearBtn');
 
-        // Load the saved note from localStorage when the page loads
-        window.addEventListener('load', () => {
-            const savedNote = localStorage.getItem('userNote');
-            if (savedNote) {
-                notepad.value = savedNote;
-            }
-        });
-
-        // Save the note to localStorage whenever the user types
-        notepad.addEventListener('input', () => {
-            localStorage.setItem('userNote', notepad.value);
-        });
-
-        // Clear the notepad and localStorage when the button is clicked
-        clearBtn.addEventListener('click', () => {
-            notepad.value = ''; // Clear the textarea
-            localStorage.removeItem('userNote'); // Remove the item from storage
-        });
-    </script>
+    <!-- JavaScript -->
+    <script src="assets/js/app.js"></script>
 </body>
 </html>
